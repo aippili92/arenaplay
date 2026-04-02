@@ -24,6 +24,7 @@ export default function PlayerGame({ gameContext, onLeave }) {
   const [playerCount, setPlayerCount] = useState(0);
   const [timeLeft, setTimeLeft] = useState(30);
   const [showDelta, setShowDelta] = useState(false);
+  const [incomingReactions, setIncomingReactions] = useState([]);
 
   const timerRef = useRef(null);
 
@@ -103,6 +104,10 @@ export default function PlayerGame({ gameContext, onLeave }) {
         break;
       }
 
+      case EventType.REACTION_BURST:
+        if (Array.isArray(msg.reactions)) setIncomingReactions(msg.reactions);
+        break;
+
       case EventType.CHAT_MESSAGE:
         setChatMessages((prev) => [
           ...prev,
@@ -110,9 +115,8 @@ export default function PlayerGame({ gameContext, onLeave }) {
         ]);
         break;
 
-      case EventType.PLAYER_JOINED:
-      case EventType.CROWD_ENERGY_UPDATE:
-        if (typeof msg.playerCount === 'number') setPlayerCount(msg.playerCount);
+      case EventType.PLAYER_COUNT_UPDATE:
+        if (typeof msg.count === 'number') setPlayerCount(msg.count);
         break;
 
       case EventType.GAME_ENDED:
@@ -233,6 +237,7 @@ export default function PlayerGame({ gameContext, onLeave }) {
               <ReactionStrip
                 pubnubClient={pubnub}
                 channel={ch.reactions(gameId)}
+                incomingReactions={incomingReactions}
               />
             </>
           )}

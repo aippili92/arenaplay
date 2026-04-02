@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useReactionBatcher } from '../hooks/useReactionBatcher.js';
 
 const EMOJIS = ['🔥', '⚡', '🎯', '😱', '👏'];
@@ -10,6 +10,22 @@ const EMOJIS = ['🔥', '⚡', '🎯', '😱', '👏'];
 export default function ReactionStrip({ pubnubClient, channel, incomingReactions = [] }) {
   const { sendReaction } = useReactionBatcher(pubnubClient, channel);
   const [floaters, setFloaters] = useState([]);
+
+  // Show floaters when reactions arrive from other players
+  useEffect(() => {
+    if (!incomingReactions.length) return;
+    const newFloaters = incomingReactions.flatMap(({ emoji, count }) =>
+      Array.from({ length: Math.min(count, 5) }, (_, i) => ({
+        id: Date.now() + Math.random() + i,
+        emoji,
+        xOffset: Math.random() * 80 - 40,
+      }))
+    );
+    setFloaters((prev) => [...prev.slice(-15), ...newFloaters]);
+    const ids = new Set(newFloaters.map((f) => f.id));
+    const t = setTimeout(() => setFloaters((prev) => prev.filter((f) => !ids.has(f.id))), 1500);
+    return () => clearTimeout(t);
+  }, [incomingReactions]);
 
   // Add a floater when user clicks
   const handleClick = useCallback(

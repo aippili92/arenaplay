@@ -59,8 +59,8 @@ export default function HostDashboard({ gameContext, onLeave }) {
           setCrowdEnergy((prev) => Math.min(100, prev + total * 2));
         }
         break;
-      case EventType.PLAYER_JOINED:
-        if (typeof msg.playerCount === 'number') setPlayerCount(msg.playerCount);
+      case EventType.PLAYER_COUNT_UPDATE:
+        if (typeof msg.count === 'number') setPlayerCount(msg.count);
         break;
       case EventType.GAME_ENDED:
         setPhase('ended');
