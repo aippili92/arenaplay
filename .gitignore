@@ -32,3 +32,6 @@ frontend/.env.local
 
 # Vercel
 .vercel/
+
+# Architecture docs (local only)
+docs/
