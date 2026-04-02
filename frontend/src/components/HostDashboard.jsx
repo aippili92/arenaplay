@@ -64,7 +64,7 @@ export default function HostDashboard({ gameContext, onLeave }) {
         break;
       case EventType.GAME_ENDED:
         setPhase('ended');
-        if (Array.isArray(msg.leaderboard)) setLeaderboard(msg.leaderboard);
+        if (Array.isArray(msg.finalLeaderboard)) setLeaderboard(msg.finalLeaderboard);
         break;
       case EventType.QUESTION_BROADCAST:
         setPhase('question');

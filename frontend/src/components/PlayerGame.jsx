@@ -122,7 +122,7 @@ export default function PlayerGame({ gameContext, onLeave }) {
       case EventType.GAME_ENDED:
         stopTimer();
         setPhase('ended');
-        if (Array.isArray(msg.leaderboard)) setLeaderboard(msg.leaderboard);
+        if (Array.isArray(msg.finalLeaderboard)) setLeaderboard(msg.finalLeaderboard);
         break;
 
       default:
